@@ -1,0 +1,18 @@
+image: docker.io/library/php:7.4-apache
+
+tasks:
+  - init: |
+      sudo service mysql start
+      git clone https://github.com/digininja/DVWA.git /var/www/html
+      cd /var/www/html
+      cp config/config.inc.php.dist config/config.inc.php
+      chmod 777 /var/www/html/hackable/uploads
+      chmod 777 /var/www/html/external/phpids/0.6/lib/IDS/tmp/phpids_log.txt
+      chmod 777 /var/www/html/config
+      mysql -u root -e "CREATE DATABASE dvwa;"
+      echo "Setup complete!"
+    command: apache2-foreground
+
+ports:
+  - port: 8080
+    onOpen: open-preview
